@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Book from '@/lib/models/Book';
+import { books as staticBooks } from '@/app/data/books';
 
 /**
  * GET /api/books
@@ -9,14 +10,27 @@ import Book from '@/lib/models/Book';
  */
 export async function GET() {
   try {
-    await connectDB();
+    try {
+      await connectDB();
+      const books = await Book.find({}).lean();
 
-    const books = await Book.find({}).lean();
+      if (books && books.length > 0) {
+        return NextResponse.json({
+          success: true,
+          count: books.length,
+          data: books,
+        }, { status: 200 });
+      }
+    } catch (dbError) {
+      console.error('Database connection failed, falling back to static data:', dbError);
+    }
 
+    // Fallback to static data
     return NextResponse.json({
       success: true,
-      count: books.length,
-      data: books,
+      count: staticBooks.length,
+      data: staticBooks,
+      isStatic: true,
     }, { status: 200 });
 
   } catch (error) {

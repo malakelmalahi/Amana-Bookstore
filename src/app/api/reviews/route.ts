@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Review from '@/lib/models/Review';
+import { reviews as staticReviews } from '@/app/data/reviews';
 
 /**
  * GET /api/reviews
@@ -10,25 +11,47 @@ import Review from '@/lib/models/Review';
  */
 export async function GET(request: NextRequest) {
     try {
-        await connectDB();
+        try {
+            await connectDB();
 
-        // Get bookId from query parameters if provided
+            // Get bookId from query parameters if provided
+            const { searchParams } = new URL(request.url);
+            const bookId = searchParams.get('bookId');
+
+            let reviews;
+            if (bookId) {
+                // Filter reviews by bookId if provided
+                reviews = await Review.find({ bookId }).lean();
+            } else {
+                // Return all reviews
+                reviews = await Review.find({}).lean();
+            }
+
+            if (reviews && reviews.length > 0) {
+                return NextResponse.json({
+                    success: true,
+                    count: reviews.length,
+                    data: reviews,
+                }, { status: 200 });
+            }
+        } catch (dbError) {
+            console.error('Database connection failed, falling back to static data:', dbError);
+        }
+
+        // Fallback to static data
         const { searchParams } = new URL(request.url);
         const bookId = searchParams.get('bookId');
 
-        let reviews;
+        let reviews = staticReviews;
         if (bookId) {
-            // Filter reviews by bookId if provided
-            reviews = await Review.find({ bookId }).lean();
-        } else {
-            // Return all reviews
-            reviews = await Review.find({}).lean();
+            reviews = staticReviews.filter(r => r.bookId === bookId);
         }
 
         return NextResponse.json({
             success: true,
             count: reviews.length,
             data: reviews,
+            isStatic: true,
         }, { status: 200 });
 
     } catch (error) {
