@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Cart from '@/lib/models/Cart';
+import { initialCart as staticCart } from '@/app/data/cart';
 
 /**
  * GET /api/cart
@@ -10,25 +11,39 @@ import Cart from '@/lib/models/Cart';
  */
 export async function GET(request: NextRequest) {
   try {
-    await connectDB();
+    try {
+      await connectDB();
 
-    // Get userId from query parameters if provided
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
+      // Get userId from query parameters if provided
+      const { searchParams } = new URL(request.url);
+      const userId = searchParams.get('userId');
 
-    let carts;
-    if (userId) {
-      // Filter cart by userId if provided
-      carts = await Cart.find({ userId }).lean();
-    } else {
-      // Return all carts
-      carts = await Cart.find({}).lean();
+      let carts;
+      if (userId) {
+        // Filter cart by userId if provided
+        carts = await Cart.find({ userId }).lean();
+      } else {
+        // Return all carts
+        carts = await Cart.find({}).lean();
+      }
+
+      if (carts && carts.length > 0) {
+        return NextResponse.json({
+          success: true,
+          count: carts.length,
+          data: carts,
+        }, { status: 200 });
+      }
+    } catch (dbError) {
+      console.error('Database connection failed, falling back to static data:', dbError);
     }
 
+    // Fallback to static data
     return NextResponse.json({
       success: true,
-      count: carts.length,
-      data: carts,
+      count: staticCart.length,
+      data: staticCart,
+      isStatic: true,
     }, { status: 200 });
 
   } catch (error) {

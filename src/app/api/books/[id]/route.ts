@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Book from '@/lib/models/Book';
+import { books as staticBooks } from '@/app/data/books';
 
 /**
  * GET /api/books/[id]
@@ -11,29 +12,44 @@ export async function GET(
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await context.params;
+
     try {
-        await connectDB();
+        try {
+            await connectDB();
 
-        const { id } = await context.params;
+            // Try to find by MongoDB _id first, then by custom id field
+            let book = await Book.findById(id).lean();
 
-        // Try to find by MongoDB _id first, then by custom id field
-        let book = await Book.findById(id).lean();
+            if (!book) {
+                book = await Book.findOne({ id: id }).lean();
+            }
 
-        if (!book) {
-            book = await Book.findOne({ id: id }).lean();
+            if (book) {
+                return NextResponse.json({
+                    success: true,
+                    data: book,
+                }, { status: 200 });
+            }
+        } catch (dbError) {
+            console.error('Database connection failed, falling back to static data:', dbError);
         }
 
-        if (!book) {
+        // Fallback to static data
+        const staticBook = staticBooks.find(b => b.id === id);
+
+        if (staticBook) {
             return NextResponse.json({
-                success: false,
-                error: 'Book not found',
-            }, { status: 404 });
+                success: true,
+                data: staticBook,
+                isStatic: true,
+            }, { status: 200 });
         }
 
         return NextResponse.json({
-            success: true,
-            data: book,
-        }, { status: 200 });
+            success: false,
+            error: 'Book not found',
+        }, { status: 404 });
 
     } catch (error) {
         console.error('Error fetching book:', error);
