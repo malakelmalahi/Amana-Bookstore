@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Book, CartItem, Review } from '../../types';
 
@@ -12,9 +12,10 @@ export default function BookDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const params = useParams();
-  const router = useRouter();
   const { id } = params;
 
   useEffect(() => {
@@ -55,39 +56,23 @@ export default function BookDetailPage() {
     fetchBookData();
   }, [id]);
 
-  const handleAddToCart = () => {
-    if (!book) return;
+  const handleAddToCart = async () => {
+    if (!book || isAdding) return;
+    setIsAdding(true);
+    await new Promise((resolve) => setTimeout(resolve, 600));
 
-    const cartItem: CartItem = {
-      id: `${book.id}-${Date.now()}`,
-      bookId: book.id,
-      quantity: quantity,
-      addedAt: new Date().toISOString(),
-    };
-
-    // Retrieve existing cart from localStorage
     const storedCart = localStorage.getItem('cart');
     const cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+    const existing = cart.find((item) => item.bookId === book.id);
 
-    // Check if the book is already in the cart
-    const existingItemIndex = cart.findIndex((item) => item.bookId === book.id);
+    if (existing) existing.quantity += quantity;
+    else cart.push({ id: `${book.id}-${Date.now()}`, bookId: book.id, quantity, addedAt: new Date().toISOString() });
 
-    if (existingItemIndex > -1) {
-      // Update quantity if item already exists
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      // Add new item to cart
-      cart.push(cartItem);
-    }
-
-    // Save updated cart to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
-
-    // Dispatch a custom event to notify the Navbar
     window.dispatchEvent(new CustomEvent('cartUpdated'));
-
-    // Redirect to the cart page after adding
-    router.push('/cart');
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 2000);
+    setIsAdding(false);
   };
 
   const renderStars = (rating: number) => {
@@ -209,9 +194,14 @@ export default function BookDetailPage() {
 
           <button
             onClick={handleAddToCart}
-            className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition-colors duration-300 text-lg font-semibold cursor-pointer"
+            disabled={!book.inStock || isAdding}
+            className={`w-full py-3 rounded-md transition-all duration-300 text-lg font-semibold cursor-pointer ${
+              !book.inStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed' :
+              showSuccess ? 'bg-green-600 text-white' :
+              isAdding ? 'bg-blue-400 text-white cursor-wait' : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
           >
-            Add to Cart
+            {showSuccess ? '✓ Added to Cart!' : isAdding ? 'Adding...' : 'Add to Cart'}
           </button>
 
           <Link href="/" className="text-blue-500 hover:underline mt-6 text-center cursor-pointer">
