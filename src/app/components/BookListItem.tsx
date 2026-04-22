@@ -147,16 +147,18 @@ const BookListItem: React.FC<BookListItemProps> = ({ book, onAddToCart }) => {
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-2 min-w-[120px]">
-                <Link href={`/book/${book.id}`} className="cursor-pointer">
-                  <button className="w-full px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
-                    View Details
-                  </button>
+                <Link
+                  href={`/book/${book.id}`}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200 text-center focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+                  aria-label={`View details for ${book.title}`}
+                >
+                  View Details
                 </Link>
                 
                 <button
                   onClick={handleAddToCart}
                   disabled={!book.inStock || isAddingToCart}
-                  className={`w-full px-3 py-2 text-sm rounded-md transition-colors duration-200 ${
+                  className={`w-full px-3 py-2 text-sm rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none ${
                     !book.inStock
                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       : showSuccess
