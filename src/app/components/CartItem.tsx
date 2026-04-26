@@ -37,6 +37,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
           <button 
             onClick={() => onUpdateQuantity(book.id, quantity - 1)}
             disabled={quantity <= 1}
+            aria-label={`Decrease quantity of ${book.title}`}
             className="px-2 py-1 border rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             -
@@ -44,6 +45,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
           <span>{quantity}</span>
           <button 
             onClick={() => onUpdateQuantity(book.id, quantity + 1)}
+            aria-label={`Increase quantity of ${book.title}`}
             className="px-2 py-1 border rounded-md hover:bg-gray-100 cursor-pointer"
           >
             +

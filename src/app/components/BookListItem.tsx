@@ -147,10 +147,11 @@ const BookListItem: React.FC<BookListItemProps> = ({ book, onAddToCart }) => {
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-2 min-w-[120px]">
-                <Link href={`/book/${book.id}`} className="cursor-pointer">
-                  <button className="w-full px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
-                    View Details
-                  </button>
+                <Link
+                  href={`/book/${book.id}`}
+                  className="w-full px-3 py-2 text-sm text-center border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+                >
+                  View Details
                 </Link>
                 
                 <button
