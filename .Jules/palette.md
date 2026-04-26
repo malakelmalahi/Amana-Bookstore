@@ -1,0 +1,3 @@
+## 2025-05-14 - Nested Interactive Elements and Keyboard Accessibility
+**Learning:** Avoid nesting `<button>` elements inside Next.js `<Link>` components. This creates invalid semantic HTML and can cause unexpected behavior with screen readers and keyboard navigation. Additionally, icon-only buttons require explicit `aria-label` attributes for accessibility.
+**Action:** Style `<Link>` components directly to look like buttons when navigation is the primary action, and ensure all icon-only buttons have descriptive ARIA labels. Always include a "Skip to main content" link in the root layout for keyboard users.
