@@ -1,0 +1,3 @@
+## 2025-04-29 - Skip to Main Content implementation
+**Learning:** In applications with a fixed navbar, keyboard users have to tab through every navigation link on every page load before reaching the main content. A 'Skip to main content' link is a simple but high-impact accessibility improvement that solves this. Using `sr-only focus:not-sr-only` ensures it doesn't disrupt the visual design for sighted mouse users while remaining fully functional for keyboard users.
+**Action:** Always include a 'Skip to main content' link in the root layout of any multi-page application, especially those with global navigation elements.
