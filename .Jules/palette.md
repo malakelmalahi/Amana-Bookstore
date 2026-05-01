@@ -1,0 +1,3 @@
+## 2025-05-22 - Global Navigation Accessibility
+**Learning:** Adding a "Skip to main content" link and explicit ARIA attributes (like `aria-current` and descriptive `aria-label` for dynamic content) significantly improves keyboard and screen reader accessibility without impacting the visual design for most users. Target main content with `tabIndex={-1}` to ensure focus lands correctly even if the element isn't naturally focusable.
+**Action:** Always include a skip-link in the root layout and ensure navigation links provide clear context to assistive technologies about their current state and dynamic values.
