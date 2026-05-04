@@ -1,0 +1,3 @@
+## 2026-05-04 - [Accessible Navigation: Skip to Main Content]
+**Learning:** Adding a "Skip to main content" link as the first focusable element is a high-impact, low-effort accessibility improvement that allows keyboard users to bypass repetitive navigation. Using `tabIndex={-1}` on the target `<main>` element ensures reliable programmatic focus across all browsers without adding visual clutter for mouse users.
+**Action:** Always include a skip-to-content link in the root layout of multi-page applications, ensuring it's the first child of the `<body>` and correctly targets the main content area with proper focus management.
