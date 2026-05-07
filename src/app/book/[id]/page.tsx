@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Book, CartItem, Review } from '../../types';
 
@@ -12,9 +12,10 @@ export default function BookDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const params = useParams();
-  const router = useRouter();
   const { id } = params;
 
   useEffect(() => {
@@ -55,39 +56,51 @@ export default function BookDetailPage() {
     fetchBookData();
   }, [id]);
 
-  const handleAddToCart = () => {
-    if (!book) return;
+  const handleAddToCart = async () => {
+    if (!book || isAddingToCart) return;
 
-    const cartItem: CartItem = {
-      id: `${book.id}-${Date.now()}`,
-      bookId: book.id,
-      quantity: quantity,
-      addedAt: new Date().toISOString(),
-    };
+    setIsAddingToCart(true);
 
-    // Retrieve existing cart from localStorage
-    const storedCart = localStorage.getItem('cart');
-    const cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Check if the book is already in the cart
-    const existingItemIndex = cart.findIndex((item) => item.bookId === book.id);
+      const cartItem: CartItem = {
+        id: `${book.id}-${Date.now()}`,
+        bookId: book.id,
+        quantity: quantity,
+        addedAt: new Date().toISOString(),
+      };
 
-    if (existingItemIndex > -1) {
-      // Update quantity if item already exists
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      // Add new item to cart
-      cart.push(cartItem);
+      // Retrieve existing cart from localStorage
+      const storedCart = localStorage.getItem('cart');
+      const cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+
+      // Check if the book is already in the cart
+      const existingItemIndex = cart.findIndex((item) => item.bookId === book.id);
+
+      if (existingItemIndex > -1) {
+        // Update quantity if item already exists
+        cart[existingItemIndex].quantity += quantity;
+      } else {
+        // Add new item to cart
+        cart.push(cartItem);
+      }
+
+      // Save updated cart to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // Dispatch a custom event to notify the Navbar
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+      // Show success feedback
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setIsAddingToCart(false);
     }
-
-    // Save updated cart to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-    // Dispatch a custom event to notify the Navbar
-    window.dispatchEvent(new CustomEvent('cartUpdated'));
-
-    // Redirect to the cart page after adding
-    router.push('/cart');
   };
 
   const renderStars = (rating: number) => {
@@ -209,9 +222,35 @@ export default function BookDetailPage() {
 
           <button
             onClick={handleAddToCart}
-            className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition-colors duration-300 text-lg font-semibold cursor-pointer"
+            disabled={!book.inStock || isAddingToCart}
+            className={`w-full py-3 rounded-md transition-colors duration-300 text-lg font-semibold flex items-center justify-center gap-2 ${
+              !book.inStock
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : showSuccess
+                ? 'bg-green-600 text-white cursor-pointer'
+                : isAddingToCart
+                ? 'bg-blue-400 text-white cursor-wait'
+                : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+            }`}
           >
-            Add to Cart
+            {showSuccess ? (
+              <>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Added to Cart!
+              </>
+            ) : isAddingToCart ? (
+              <>
+                <svg className="animate-spin w-6 h-6" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Adding...
+              </>
+            ) : (
+              'Add to Cart'
+            )}
           </button>
 
           <Link href="/" className="text-blue-500 hover:underline mt-6 text-center cursor-pointer">
