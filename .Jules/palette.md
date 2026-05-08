@@ -1,0 +1,3 @@
+## 2025-05-15 - Skip to main content accessibility pattern
+**Learning:** Implementing a "Skip to main content" link is a fundamental accessibility win for keyboard and screen reader users. It requires the link to be the first focusable element, visually hidden until focused, and a correctly targeted `<main>` element with `tabIndex={-1}` and `outline-none` to handle programmatic focus without visual artifacts for mouse users.
+**Action:** Always include a "Skip to main content" link in the root layout of multi-page applications, ensuring the target element is properly configured to receive focus.
