@@ -49,13 +49,22 @@ const Navbar: React.FC = () => {
           Amana Bookstore
         </Link>
         <div className="flex items-center space-x-4">
-          <Link href="/" className={`text-gray-600 hover:text-blue-500 cursor-pointer ${pathname === '/' ? 'text-blue-500 font-semibold' : ''}`}>
+          <Link
+            href="/"
+            className={`text-gray-600 hover:text-blue-500 cursor-pointer ${pathname === '/' ? 'text-blue-500 font-semibold' : ''}`}
+            aria-current={pathname === '/' ? 'page' : undefined}
+          >
             Home
           </Link>
-          <Link href="/cart" className={`text-gray-600 hover:text-blue-500 flex items-center cursor-pointer ${pathname === '/cart' ? 'text-blue-500 font-semibold' : ''}`}>
+          <Link
+            href="/cart"
+            className={`text-gray-600 hover:text-blue-500 flex items-center cursor-pointer ${pathname === '/cart' ? 'text-blue-500 font-semibold' : ''}`}
+            aria-current={pathname === '/cart' ? 'page' : undefined}
+            aria-label={`Shopping cart, ${cartItemCount} ${cartItemCount === 1 ? 'item' : 'items'}`}
+          >
             My Cart
             {cartItemCount > 0 && (
-              <span className="ml-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="ml-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" aria-hidden="true">
                 {cartItemCount}
               </span>
             )}

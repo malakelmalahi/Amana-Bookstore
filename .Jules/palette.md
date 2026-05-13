@@ -1,0 +1,3 @@
+## 2025-05-14 - [Accessibility Patterns for Navigation]
+**Learning:** For Next.js App Router applications, implementing a "Skip to Main Content" link in the root layout and applying `aria-current="page"` to active links in the Navbar significantly improves keyboard and screen reader navigation. Providing a descriptive `aria-label` for the shopping cart that includes a dynamic item count ensures screen reader users have the same immediate context as sighted users.
+**Action:** Always include a skip-link in the base layout targeting the main content area with `tabIndex={-1}`. Use `usePathname` to dynamically apply `aria-current="page"` to navigation links.
