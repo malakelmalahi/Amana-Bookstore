@@ -1,0 +1,3 @@
+## 2026-05-16 - [Accessibility Improvements for Cart and Navbar]
+**Learning:** For dynamic UI components like shopping carts, visible labels like "My Cart" and badges with counts are often insufficient for screen readers. Providing a dynamic `aria-label` that combines the text and state (e.g., "My Cart, 3 items") and using `aria-hidden="true"` on the visual badge prevents redundant or confusing announcements. Similarly, icon-only buttons or buttons with generic labels like "+" and "-" require descriptive `aria-label`s to provide context.
+**Action:** Always include dynamic state information in ARIA labels for summary links (like cart/notifications) and descriptive labels for action buttons in repeating lists.
