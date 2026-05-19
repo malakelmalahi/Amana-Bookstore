@@ -35,8 +35,26 @@ export default function HomePage() {
 
   // Simple cart handler for demo purposes
   const handleAddToCart = (bookId: string) => {
-    console.log(`Added book ${bookId} to cart`);
-    // Here you would typically dispatch to a cart state or call an API
+    const storedCart = localStorage.getItem('cart');
+    let cart = [];
+    if (storedCart) {
+      cart = JSON.parse(storedCart);
+    }
+
+    const existingItem = cart.find((item: any) => item.bookId === bookId);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({
+        id: `${bookId}-${Date.now()}`,
+        bookId,
+        quantity: 1,
+        addedAt: new Date().toISOString()
+      });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
   };
 
   if (isLoading) {
