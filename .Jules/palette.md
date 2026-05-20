@@ -1,0 +1,3 @@
+## 2025-05-14 - Skip to Main Content Accessibility
+**Learning:** Keyboard and screen reader users often have to navigate through repetitive navigation links on every page load. A "Skip to main content" link provides an essential shortcut to the primary content area, improving efficiency and meeting WCAG 2.4.1 (Bypass Blocks).
+**Action:** Implement a skip link as the first focusable element in the `<body>`. Use Tailwind's `sr-only focus:not-sr-only` to keep it hidden until focused. Ensure the target element (usually `<main>`) has a matching ID and `tabIndex={-1}` to receive focus correctly across all browsers.
