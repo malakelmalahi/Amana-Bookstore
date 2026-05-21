@@ -1,0 +1,3 @@
+## 2026-05-21 - [Accessibility] Skip Links and Dynamic Cart Labels
+**Learning:** Keyboard users benefit from a "Skip to main content" link as the first focusable element to bypass repetitive navigation. Additionally, screen readers need explicit context for dynamic counts (like a cart badge). A visual badge saying "3" is less helpful than an ARIA label saying "My Cart, 3 items".
+**Action:** Implement skip links in root layouts targeting a `<main>` element with `tabIndex={-1}`. For dynamic counters, use descriptive `aria-label` on the parent interactive element and mark the visual badge with `aria-hidden="true"` to avoid redundant announcements.
