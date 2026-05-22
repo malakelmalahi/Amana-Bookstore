@@ -1,0 +1,3 @@
+## 2025-05-22 - Skip to Main Content Link
+**Learning:** In SPAs like Next.js, navigation often happens without a full page reload, but screen readers and keyboard users still need a way to bypass repetitive navigation links. Implementing a "Skip to Main Content" link at the root level ensures consistent accessibility across all pages. Targeting an element with `tabIndex={-1}` and `outline-none` allows for programmatic focus without visual clutter for mouse users.
+**Action:** Always include a skip-to-content link as the first focusable element in the root layout of web applications, especially those with complex navigation menus.
