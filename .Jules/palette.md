@@ -1,0 +1,3 @@
+## 2025-05-14 - Asynchronous Inline Feedback for Cart Actions
+**Learning:** In e-commerce interfaces, providing immediate asynchronous feedback (loading and success states) directly on the action button is superior to immediate redirection. It maintains the user's browsing context, allowing them to continue exploring products while confirming their action was successful. This pattern is consistent with `BookCard` and `BookListItem` in this application.
+**Action:** Always favor inline asynchronous feedback for non-destructive, repeatable actions like "Add to Cart" over intrusive redirects, ensuring consistency across all product interaction points.
