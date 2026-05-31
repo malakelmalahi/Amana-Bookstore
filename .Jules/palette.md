@@ -1,0 +1,3 @@
+## 2025-05-15 - "Skip to main content" link for Accessibility
+**Learning:** Adding a "Skip to main content" link as the first child of the `<body>` is a critical keyboard accessibility pattern. It allows users to bypass repetitive navigation and jump directly to the primary content area. Using Tailwind's `sr-only` with `focus:not-sr-only` ensures the link is only visible when focused, maintaining a clean visual UI for most users while providing essential utility for others.
+**Action:** Always check for the presence of a skip link in the root layout and implement it if missing, ensuring it targets a `<main>` element with a corresponding `id` and `tabIndex={-1}`.
