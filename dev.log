@@ -1,0 +1,16 @@
+
+> amana-bookstore@0.1.0 dev /app
+> next dev
+
+ ⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+   ▲ Next.js 15.5.0
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.0.2:3001
+
+ ✓ Starting...
+ ✓ Ready in 2.9s
+ ○ Compiling / ...
+ ✓ Compiled / in 3.2s (627 modules)
+ GET / 200 in 4599ms
+ ○ Compiling /api/books ...
+ ✓ Compiled /api/books in 822ms (650 modules)
