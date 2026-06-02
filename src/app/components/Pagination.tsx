@@ -7,6 +7,7 @@ interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onItemsPerPageChange?: (count: number) => void;
   itemsPerPage: number;
   totalItems: number;
 }
@@ -15,6 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  onItemsPerPageChange,
   itemsPerPage,
   totalItems,
 }) => {
@@ -128,15 +130,18 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {/* Items per page selector */}
       <div className="flex items-center space-x-2 text-sm text-gray-600">
-        <span>Items per page:</span>
+        <label htmlFor="itemsPerPage">Items per page:</label>
         <select
+          id="itemsPerPage"
           value={itemsPerPage}
-          onChange={() => {
-            // Reset to page 1 when changing items per page
+          onChange={(e) => {
+            const newCount = parseInt(e.target.value, 10);
             onPageChange(1);
-            // The parent component should handle the itemsPerPage change
+            if (onItemsPerPageChange) {
+              onItemsPerPageChange(newCount);
+            }
           }}
-          className="px-2 py-1 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-2 py-1 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
         >
           <option value={8}>8</option>
           <option value={12}>12</option>
