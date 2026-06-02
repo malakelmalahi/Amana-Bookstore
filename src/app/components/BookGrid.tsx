@@ -18,7 +18,7 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
   const [sortBy, setSortBy] = useState('title');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
+  const [itemsPerPage, setItemsPerPage] = useState(8);
   const [featuredCarouselIndex, setFeaturedCarouselIndex] = useState(0);
 
   const featuredBooks = useMemo(() => books.filter(book => book.featured), [books]);
@@ -176,7 +176,11 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
       <section className="mb-8 space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="w-full md:w-1/2">
+            <label htmlFor="searchBooks" className="sr-only">
+              Search by title or author
+            </label>
             <input
+              id="searchBooks"
               type="text"
               placeholder="Search by title or author..."
               value={searchQuery}
@@ -203,7 +207,7 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span>Showing {filteredAndSortedBooks.length} books</span>
+            <span aria-live="polite">Showing {filteredAndSortedBooks.length} books</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -264,6 +268,7 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
+              onItemsPerPageChange={setItemsPerPage}
               itemsPerPage={itemsPerPage}
               totalItems={filteredAndSortedBooks.length}
             />
