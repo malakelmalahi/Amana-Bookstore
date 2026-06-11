@@ -1,0 +1,3 @@
+## 2025-05-14 - Skip to Main Content Link
+**Learning:** For a "Skip to main content" link to work effectively with a fixed navbar, it requires a high z-index (e.g., `z-50`) to ensure it appears above the navbar when focused. Additionally, the target `<main>` element must have `tabIndex={-1}` to receive programmatic focus correctly across all browsers, and `outline-none` to prevent a focus ring on the entire content area.
+**Action:** Always include a skip link as the first focusable element in `layout.tsx` for apps with complex navigation, ensuring correct z-index and focus management on the target.
