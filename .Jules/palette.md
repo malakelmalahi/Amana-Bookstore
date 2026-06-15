@@ -1,0 +1,3 @@
+## 2025-05-22 - [Accessibility in Cart Interactions]
+**Learning:** Icon-only buttons or buttons with simple symbols (like + and -) in a cart context lack sufficient descriptive information for screen reader users, making it difficult to understand which item's quantity is being modified. Additionally, visual updates to quantities are not automatically announced by assistive technologies unless explicitly marked as live regions.
+**Action:** Always provide descriptive `aria-label` attributes for cart controls that include the item's title (e.g., "Increase quantity of [Book Title]"). Wrap dynamic quantity displays in `aria-live="polite"` and `aria-atomic="true"` to ensure immediate and clear announcement of state changes to all users.
