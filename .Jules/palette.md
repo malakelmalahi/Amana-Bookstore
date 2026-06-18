@@ -1,0 +1,3 @@
+## 2025-05-15 - Dynamic Pagination and Accessibility
+**Learning:** In a component-based architecture like React, ensuring that local state (like `itemsPerPage`) is correctly lifted or shared via props is crucial for interactive elements like pagination selectors to function as expected. Additionally, replacing generic `<span>` with `<label htmlFor="...">` and using `aria-live="polite"` significantly improves the experience for assistive technology users by providing clear context and announcing dynamic changes.
+**Action:** Always check if interactive UI controls (like selects or buttons) are backed by functional state/callbacks and ensure they have semantic labels and appropriate ARIA live regions for dynamic updates.
