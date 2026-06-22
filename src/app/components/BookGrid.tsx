@@ -175,14 +175,28 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
 
       <section className="mb-8 space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 relative">
+            <label htmlFor="searchBooks" className="sr-only">Search books by title or author</label>
             <input
+              id="searchBooks"
               type="text"
               placeholder="Search by title or author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
+                aria-label="Clear search"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
           <div className="w-full md:w-1/4">
             <label htmlFor="genreFilter" className="block text-sm font-medium text-gray-700 mb-2">
@@ -202,8 +216,10 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span>Showing {filteredAndSortedBooks.length} books</span>
+          <div className="flex items-center gap-2 text-sm text-gray-600" aria-live="polite" aria-atomic="true">
+            <span>
+              Showing {filteredAndSortedBooks.length} {filteredAndSortedBooks.length === 1 ? 'book' : 'books'}
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
