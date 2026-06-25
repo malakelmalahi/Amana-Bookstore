@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Book, CartItem, Review } from '../../types';
 
@@ -12,9 +12,10 @@ export default function BookDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [showAdded, setShowAdded] = useState(false);
 
   const params = useParams();
-  const router = useRouter();
   const { id } = params;
 
   useEffect(() => {
@@ -55,9 +56,10 @@ export default function BookDetailPage() {
     fetchBookData();
   }, [id]);
 
-  const handleAddToCart = () => {
-    if (!book) return;
-
+  const handleAddToCart = async () => {
+    if (!book || isAdding) return;
+    setIsAdding(true);
+    await new Promise((r) => setTimeout(r, 500));
     const cartItem: CartItem = {
       id: `${book.id}-${Date.now()}`,
       bookId: book.id,
@@ -86,8 +88,9 @@ export default function BookDetailPage() {
     // Dispatch a custom event to notify the Navbar
     window.dispatchEvent(new CustomEvent('cartUpdated'));
 
-    // Redirect to the cart page after adding
-    router.push('/cart');
+    setShowAdded(true);
+    setTimeout(() => setShowAdded(false), 2000);
+    setIsAdding(false);
   };
 
   const renderStars = (rating: number) => {
@@ -209,9 +212,12 @@ export default function BookDetailPage() {
 
           <button
             onClick={handleAddToCart}
-            className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition-colors duration-300 text-lg font-semibold cursor-pointer"
+            disabled={isAdding}
+            className={`w-full py-3 rounded-md transition-colors duration-300 text-lg font-semibold cursor-pointer ${
+              showAdded ? 'bg-green-600' : isAdding ? 'bg-blue-400' : 'bg-blue-500 hover:bg-blue-600'
+            } text-white`}
           >
-            Add to Cart
+            {showAdded ? '✓ Added!' : isAdding ? 'Adding...' : 'Add to Cart'}
           </button>
 
           <Link href="/" className="text-blue-500 hover:underline mt-6 text-center cursor-pointer">
