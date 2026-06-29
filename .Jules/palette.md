@@ -1,0 +1,3 @@
+## 2025-05-15 - Search UX and Accessibility Enhancements
+**Learning:** For search inputs that rely solely on placeholders, a visually hidden label (`sr-only`) is essential for screen reader users to identify the field's purpose. Providing a "Clear Search" button enhances convenience, while an `aria-live="polite"` region for the result count ensures immediate feedback for assistive technology when filtering content.
+**Action:** Always include a hidden label for placeholder-only inputs and use `aria-live` regions for dynamic content like search result counts. Ensure absolute-positioned buttons within inputs have corresponding padding-right on the input to avoid text overlap.
