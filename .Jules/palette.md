@@ -1,0 +1,3 @@
+## 2025-05-20 - [Accessibility Pattern: Dynamic Cart Updates]
+**Learning:** When updating dynamic text values like item quantities or price totals in the UI, screen readers may not automatically announce the change. Wrapping these elements in `aria-live="polite"` and `aria-atomic="true"` ensures that assistive technologies announce the updated values immediately without interrupting the user's current task.
+**Action:** Always wrap dynamic numbers (quantities, prices, totals) in an `aria-live` region and provide descriptive `aria-label` attributes for the associated control buttons (e.g., increase/decrease) to give screen reader users necessary context.
