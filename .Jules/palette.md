@@ -1,0 +1,3 @@
+## 2025-05-14 - Enhancing Search Input Accessibility and Feedback
+**Learning:** Search inputs often lack sufficient visual and structural cues for assistive technologies. Adding a decorative icon provides visual context, while a clear button improves usability. Crucially, announcing result counts via `aria-live` ensures screen reader users are aware of content changes following search or filter operations.
+**Action:** Always include a descriptive label (even if visually hidden), provide a quick reset (clear button) for search fields, and use ARIA live regions to announce dynamic content updates like result counts.
