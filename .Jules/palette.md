@@ -1,0 +1,3 @@
+## 2025-07-18 - Persistent Cart Actions on Overview Pages
+**Learning:** In multi-view catalogs or overview pages (such as a home page with book lists/grids), interactive buttons (like "Add to Cart") must hook into real state persistence (e.g., `localStorage`) and dispatch events to update parent indicators immediately (e.g., header cart count), rather than using mock or console.log-only placeholders. Otherwise, users experience a broken user journey where they are shown success indicators but see no actual cart changes.
+**Action:** Always check overview/list pages for non-functional action buttons and link them directly to real persistent storage and dynamic state dispatch event listeners.
