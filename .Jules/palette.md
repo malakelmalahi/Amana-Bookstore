@@ -1,0 +1,3 @@
+## 2025-05-15 - [Accessible Search Inputs with Magnifying Glass Icon]
+**Learning:** Screen readers require explicit form labels rather than relying solely on input placeholders. Adding a decorative magnifying glass icon inside a search input adds visual polish, but it should be hidden from assistive technologies using `aria-hidden="true"`. To prevent text overlapping, the input's padding-left (`pl-10`) must be adjusted to clear the icon.
+**Action:** Always wrap search inputs in a relative container when embedding visual icons, hide the icon from screen readers, add an `.sr-only` class labeled tag pointing to the input's id, and adjust horizontal padding appropriately.
