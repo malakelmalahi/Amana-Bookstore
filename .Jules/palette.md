@@ -1,0 +1,3 @@
+## 2025-05-15 - Accessible Search & Results Polishing
+**Learning:** When adding absolute-positioned buttons like "Clear" inside a text input, it is critical to use conditional horizontal padding (e.g., `pr-10`) so input text never overlaps the icon. Moreover, applying `aria-live="polite"` and `aria-atomic="true"` alongside proper grammatical pluralization ensures screen reader users receive timely, clear catalog status updates.
+**Action:** Always couple search inputs with a clear action button, adjust paddings dynamically, and wrap result count indicators in dynamic live regions with conditional pluralization.
