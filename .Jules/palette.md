@@ -1,0 +1,3 @@
+## 2025-05-18 - Input Field Overlap and Interactive Accessibilities
+**Learning:** Placing absolute-positioned helper elements (like magnifying glass icons or clear buttons) inside a text input improves form styling, but requires dynamic padding management to prevent search text from overlapping behind the elements. Accessible screen-reader-only labels and keyboard focus indicators for clear buttons ensure assistive technology users can fully utilize standard search inputs.
+**Action:** When adding absolute components inside an input field, dynamically set horizontal padding (e.g., `pl-10` and `pr-10` or `pr-4`) and ensure icon-only buttons use explicit `type="button"`, `aria-label`, and `focus-visible:ring-2` styling.
