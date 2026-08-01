@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Book, CartItem, Review } from '../../types';
 
@@ -12,9 +12,11 @@ export default function BookDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [hasAddedToCart, setHasAddedToCart] = useState(false);
 
   const params = useParams();
-  const router = useRouter();
   const { id } = params;
 
   useEffect(() => {
@@ -55,39 +57,52 @@ export default function BookDetailPage() {
     fetchBookData();
   }, [id]);
 
-  const handleAddToCart = () => {
-    if (!book) return;
+  const handleAddToCart = async () => {
+    if (!book || !book.inStock || isAddingToCart) return;
 
-    const cartItem: CartItem = {
-      id: `${book.id}-${Date.now()}`,
-      bookId: book.id,
-      quantity: quantity,
-      addedAt: new Date().toISOString(),
-    };
+    setIsAddingToCart(true);
 
-    // Retrieve existing cart from localStorage
-    const storedCart = localStorage.getItem('cart');
-    const cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+    try {
+      // Simulate API call delay to keep consistency with home page transitions
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Check if the book is already in the cart
-    const existingItemIndex = cart.findIndex((item) => item.bookId === book.id);
+      const cartItem: CartItem = {
+        id: `${book.id}-${Date.now()}`,
+        bookId: book.id,
+        quantity: quantity,
+        addedAt: new Date().toISOString(),
+      };
 
-    if (existingItemIndex > -1) {
-      // Update quantity if item already exists
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      // Add new item to cart
-      cart.push(cartItem);
+      // Retrieve existing cart from localStorage
+      const storedCart = localStorage.getItem('cart');
+      const cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+
+      // Check if the book is already in the cart
+      const existingItemIndex = cart.findIndex((item) => item.bookId === book.id);
+
+      if (existingItemIndex > -1) {
+        // Update quantity if item already exists
+        cart[existingItemIndex].quantity += quantity;
+      } else {
+        // Add new item to cart
+        cart.push(cartItem);
+      }
+
+      // Save updated cart to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // Dispatch a custom event to notify the Navbar
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+      // Show success feedback
+      setShowSuccess(true);
+      setHasAddedToCart(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setIsAddingToCart(false);
     }
-
-    // Save updated cart to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-    // Dispatch a custom event to notify the Navbar
-    window.dispatchEvent(new CustomEvent('cartUpdated'));
-
-    // Redirect to the cart page after adding
-    router.push('/cart');
   };
 
   const renderStars = (rating: number) => {
@@ -196,23 +211,64 @@ export default function BookDetailPage() {
           <div className="text-3xl font-bold text-blue-600 mb-6">${book.price.toFixed(2)}</div>
 
           <div className="flex items-center space-x-4 mb-6">
-            <label htmlFor="quantity" className="font-semibold">Quantity:</label>
+            <label htmlFor="quantity" className={`font-semibold ${!book.inStock ? 'text-gray-400' : 'text-gray-700'}`}>Quantity:</label>
             <input
               type="number"
               id="quantity"
               min="1"
+              disabled={!book.inStock}
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
-              className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                !book.inStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white'
+              }`}
             />
           </div>
 
           <button
             onClick={handleAddToCart}
-            className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition-colors duration-300 text-lg font-semibold cursor-pointer"
+            disabled={!book.inStock || isAddingToCart}
+            aria-live="polite"
+            className={`w-full py-3 rounded-md transition-colors duration-300 text-lg font-semibold ${
+              !book.inStock
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : showSuccess
+                ? 'bg-green-600 text-white cursor-pointer'
+                : isAddingToCart
+                ? 'bg-blue-400 text-white cursor-wait'
+                : 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer'
+            }`}
           >
-            Add to Cart
+            {showSuccess ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Added!
+              </span>
+            ) : isAddingToCart ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Adding...
+              </span>
+            ) : !book.inStock ? (
+              'Out of Stock'
+            ) : (
+              'Add to Cart'
+            )}
           </button>
+
+          {hasAddedToCart && (
+            <Link href="/cart" className="w-full mt-3 bg-green-50 text-green-700 border border-green-200 py-3 rounded-md hover:bg-green-100 transition-colors duration-300 text-lg font-semibold flex items-center justify-center gap-2 cursor-pointer">
+              <span>View Cart</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
+          )}
 
           <Link href="/" className="text-blue-500 hover:underline mt-6 text-center cursor-pointer">
             &larr; Back to Home

@@ -1,0 +1,3 @@
+## 2025-11-20 - [Book Detail Page Cart Action Transition]
+**Learning:** For asynchronous cart addition feedback, replacing abrupt page redirects with in-place button state transitions (e.g., "Add to Cart" -> "Adding..." -> "Added!") dramatically improves browsing momentum and user context. Accompanying this transition with a persistent, secondary "View Cart" link/button allows users to navigate to their cart when ready, without forcing them away from the details page.
+**Action:** Implement asynchronous button states and dynamic secondary navigation paths (like "View Cart" links) on product/details pages instead of performing immediate automatic navigation. Use `aria-live="polite"` on state-changing buttons to ensure screen readers announce status updates.
