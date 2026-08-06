@@ -1,0 +1,3 @@
+## 2025-10-24 - Search Input UX & Accessibility Polish
+**Learning:** Plain placeholder text inputs lack the required textual context for assistive technologies, and icon-only interactive controls (like a clear button) can lead to keyboard-trapping issues if focus-ring styling is not correctly initialized with outline/ring offsets. Wrapping the input in a relative container with an sr-only label ensures both full accessibility compliance and visual alignment.
+**Action:** Always pair visual placeholders with screen-reader-only labels, add conditional responsive padding to inputs (e.g., padding-right offset) when trailing clear buttons are active, and ensure all inline buttons are keyboard-accessible with visible rings on focus.
