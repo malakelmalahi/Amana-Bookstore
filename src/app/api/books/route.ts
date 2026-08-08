@@ -7,6 +7,8 @@ import Book from '@/lib/models/Book';
  * GET /api/books
  * Returns all books from the database
  */
+import { books as staticBooks } from '@/app/data/books';
+
 export async function GET() {
   try {
     await connectDB();
@@ -20,12 +22,11 @@ export async function GET() {
     }, { status: 200 });
 
   } catch (error) {
-    console.error('Error fetching books:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.warn('MongoDB connection failed, falling back to static books data:', error);
     return NextResponse.json({
-      success: false,
-      error: 'Failed to fetch books',
-      message: errorMessage,
-    }, { status: 500 });
+      success: true,
+      count: staticBooks.length,
+      data: staticBooks,
+    }, { status: 200 });
   }
 }
