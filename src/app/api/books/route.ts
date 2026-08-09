@@ -20,12 +20,22 @@ export async function GET() {
     }, { status: 200 });
 
   } catch (error) {
-    console.error('Error fetching books:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({
-      success: false,
-      error: 'Failed to fetch books',
-      message: errorMessage,
-    }, { status: 500 });
+    console.error('Error fetching books, falling back to static data:', error);
+    try {
+      const { books } = require('@/app/data/books');
+      return NextResponse.json({
+        success: true,
+        count: books.length,
+        data: books,
+      }, { status: 200 });
+    } catch (fallbackError) {
+      console.error('Fallback static books loading failed:', fallbackError);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to fetch books',
+        message: errorMessage,
+      }, { status: 500 });
+    }
   }
 }
