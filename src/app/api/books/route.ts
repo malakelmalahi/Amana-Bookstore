@@ -2,10 +2,11 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Book from '@/lib/models/Book';
+import { books as staticBooks } from '@/app/data/books';
 
 /**
  * GET /api/books
- * Returns all books from the database
+ * Returns all books from the database, or falls back to static data if MongoDB is offline
  */
 export async function GET() {
   try {
@@ -20,12 +21,11 @@ export async function GET() {
     }, { status: 200 });
 
   } catch (error) {
-    console.error('Error fetching books:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error fetching books, falling back to static data:', error);
     return NextResponse.json({
-      success: false,
-      error: 'Failed to fetch books',
-      message: errorMessage,
-    }, { status: 500 });
+      success: true,
+      count: staticBooks.length,
+      data: staticBooks,
+    }, { status: 200 });
   }
 }
