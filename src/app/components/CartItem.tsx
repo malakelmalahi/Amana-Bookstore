@@ -33,26 +33,33 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
         </div>
       </div>
       <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2" aria-live="polite" aria-atomic="true">
           <button 
             onClick={() => onUpdateQuantity(book.id, quantity - 1)}
             disabled={quantity <= 1}
-            className="px-2 py-1 border rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="px-2 py-1 border rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-blue-500 outline-none"
+            aria-label={`Decrease quantity of ${book.title}`}
           >
             -
           </button>
-          <span>{quantity}</span>
+          <span>
+            <span className="sr-only">Quantity: </span>{quantity}
+          </span>
           <button 
             onClick={() => onUpdateQuantity(book.id, quantity + 1)}
-            className="px-2 py-1 border rounded-md hover:bg-gray-100 cursor-pointer"
+            className="px-2 py-1 border rounded-md hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 outline-none"
+            aria-label={`Increase quantity of ${book.title}`}
           >
             +
           </button>
         </div>
-        <p className="text-md font-semibold w-20 text-right">${subtotal}</p>
+        <p className="text-md font-semibold w-24 text-right" aria-live="polite" aria-atomic="true">
+          <span className="sr-only">Subtotal: </span>${subtotal}
+        </p>
         <button 
           onClick={() => onRemoveItem(book.id)}
-          className="text-red-500 hover:text-red-700 font-semibold cursor-pointer"
+          className="text-red-500 hover:text-red-700 font-semibold focus-visible:ring-2 focus-visible:ring-red-500 outline-none rounded-md px-2 py-1"
+          aria-label={`Remove ${book.title} from cart`}
         >
           Remove
         </button>
