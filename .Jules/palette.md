@@ -1,0 +1,3 @@
+## 2025-05-18 - Fast-Fail DB Resiliency and Synchronized Cart Interaction
+**Learning:** Adding short server-selection timeouts (e.g., `serverSelectionTimeoutMS: 2000`) is critical when relying on static data fallbacks in server-side handlers. Without it, connection hangs delay initial loading by 30 seconds, breaking the visual experience and causing automated verification timeouts. Additionally, mock console logs in homepage elements should always be converted to fully persistent client state actions (`localStorage` + custom events) to maintain a cohesive user journey.
+**Action:** Always configure tight timeout bounds on database queries when offline fallbacks are designed, and build fully active click-to-add flows to preserve cart continuity across components.

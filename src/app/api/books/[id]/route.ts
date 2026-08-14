@@ -36,12 +36,29 @@ export async function GET(
         }, { status: 200 });
 
     } catch (error) {
-        console.error('Error fetching book:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        return NextResponse.json({
-            success: false,
-            error: 'Failed to fetch book',
-            message: errorMessage,
-        }, { status: 500 });
+        console.warn('MongoDB connection failed, falling back to static books data for book ID:', error);
+        try {
+            const { id } = await context.params;
+            const { books } = await import('../../../data/books');
+            const book = books.find(b => b.id === id);
+            if (!book) {
+                return NextResponse.json({
+                    success: false,
+                    error: 'Book not found in static data',
+                }, { status: 404 });
+            }
+            return NextResponse.json({
+                success: true,
+                data: book,
+            }, { status: 200 });
+        } catch (fallbackError) {
+            console.error('Fallback failed:', fallbackError);
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            return NextResponse.json({
+                success: false,
+                error: 'Failed to fetch book',
+                message: errorMessage,
+            }, { status: 500 });
+        }
     }
 }
