@@ -70,7 +70,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex flex-col items-center space-y-4 mt-8">
       {/* Items info */}
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-gray-600" aria-live="polite" aria-atomic="true">
         Showing {startItem} to {endItem} of {totalItems} books
       </div>
 
@@ -80,9 +80,9 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${currentPage === 1
+          className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${currentPage === 1
               ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 cursor-pointer'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
             }`}
           aria-label="Previous page"
         >
@@ -98,7 +98,7 @@ const Pagination: React.FC<PaginationProps> = ({
               ) : (
                 <button
                   onClick={() => onPageChange(page as number)}
-                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors cursor-pointer ${currentPage === page
+                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${currentPage === page
                       ? 'bg-blue-600 text-white border-blue-600'
                       : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
                     }`}
@@ -116,9 +116,9 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${currentPage === totalPages
+          className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${currentPage === totalPages
               ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 cursor-pointer'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
             }`}
           aria-label="Next page"
         >
@@ -128,8 +128,9 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {/* Items per page selector */}
       <div className="flex items-center space-x-2 text-sm text-gray-600">
-        <span>Items per page:</span>
+        <label htmlFor="itemsPerPageSelect">Items per page:</label>
         <select
+          id="itemsPerPageSelect"
           value={itemsPerPage}
           onChange={() => {
             // Reset to page 1 when changing items per page
