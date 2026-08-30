@@ -70,7 +70,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex flex-col items-center space-y-4 mt-8">
       {/* Items info */}
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-gray-600" aria-live="polite" aria-atomic="true">
         Showing {startItem} to {endItem} of {totalItems} books
       </div>
 
