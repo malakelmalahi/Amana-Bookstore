@@ -123,10 +123,11 @@ const BookCard: React.FC<BookCardProps> = ({ book, onAddToCart }) => {
         
         {/* Action Buttons */}
         <div className="flex gap-2 mt-4">
-          <Link href={`/book/${book.id}`} className="flex-1 cursor-pointer">
-            <button className="w-full px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
-              View Details
-            </button>
+          <Link
+            href={`/book/${book.id}`}
+            className="flex-1 text-center px-3 py-2 text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors duration-200 cursor-pointer"
+          >
+            View Details
           </Link>
           
           <button
