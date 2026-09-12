@@ -176,13 +176,59 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
       <section className="mb-8 space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="w-full md:w-1/2">
-            <input
-              type="text"
-              placeholder="Search by title or author..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <label htmlFor="searchInput" className="sr-only">
+              Search by title or author
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Search by title or author..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`w-full pl-10 ${
+                  searchQuery ? 'pr-10' : 'pr-4'
+                } py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-full cursor-pointer"
+                  aria-label="Clear search query"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
           <div className="w-full md:w-1/4">
             <label htmlFor="genreFilter" className="block text-sm font-medium text-gray-700 mb-2">
@@ -202,8 +248,8 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span>Showing {filteredAndSortedBooks.length} books</span>
+          <div className="flex items-center gap-2 text-sm text-gray-600" aria-live="polite" aria-atomic="true">
+            <span>Showing {filteredAndSortedBooks.length} {filteredAndSortedBooks.length === 1 ? 'book' : 'books'}</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
