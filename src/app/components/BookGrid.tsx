@@ -178,6 +178,7 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
           <div className="w-full md:w-1/2">
             <input
               type="text"
+              aria-label="Search books by title or author"
               placeholder="Search by title or author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -203,7 +204,9 @@ const BookGrid: React.FC<BookGridProps> = ({ books, onAddToCart }) => {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span>Showing {filteredAndSortedBooks.length} books</span>
+            <span aria-live="polite" aria-atomic="true">
+              Showing {filteredAndSortedBooks.length} {filteredAndSortedBooks.length === 1 ? 'book' : 'books'}
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
