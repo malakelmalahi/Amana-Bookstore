@@ -35,24 +35,32 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
           <button 
+            type="button"
             onClick={() => onUpdateQuantity(book.id, quantity - 1)}
             disabled={quantity <= 1}
-            className="px-2 py-1 border rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="px-2 py-1 border rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-500"
+            aria-label={`Decrease quantity of ${book.title}`}
           >
             -
           </button>
-          <span>{quantity}</span>
+          <span aria-live="polite" aria-atomic="true">{quantity}</span>
           <button 
+            type="button"
             onClick={() => onUpdateQuantity(book.id, quantity + 1)}
-            className="px-2 py-1 border rounded-md hover:bg-gray-100 cursor-pointer"
+            className="px-2 py-1 border rounded-md hover:bg-gray-100 cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-500"
+            aria-label={`Increase quantity of ${book.title}`}
           >
             +
           </button>
         </div>
-        <p className="text-md font-semibold w-20 text-right">${subtotal}</p>
+        <p className="text-md font-semibold w-20 text-right">
+          <span className="sr-only">Subtotal: </span>${subtotal}
+        </p>
         <button 
+          type="button"
           onClick={() => onRemoveItem(book.id)}
-          className="text-red-500 hover:text-red-700 font-semibold cursor-pointer"
+          className="text-red-500 hover:text-red-700 font-semibold cursor-pointer focus-visible:ring-2 focus-visible:ring-red-500 rounded px-1"
+          aria-label={`Remove ${book.title} from cart`}
         >
           Remove
         </button>
