@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import BookGrid from './components/BookGrid';
-import { Book } from './types';
+import { Book, CartItem } from './types';
 
 export default function HomePage() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -33,10 +33,28 @@ export default function HomePage() {
     fetchBooks();
   }, []);
 
-  // Simple cart handler for demo purposes
   const handleAddToCart = (bookId: string) => {
-    console.log(`Added book ${bookId} to cart`);
-    // Here you would typically dispatch to a cart state or call an API
+    try {
+      const storedCart = localStorage.getItem('cart');
+      const cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+      const existingItemIndex = cart.findIndex((item) => item.bookId === bookId);
+
+      if (existingItemIndex > -1) {
+        cart[existingItemIndex].quantity += 1;
+      } else {
+        cart.push({
+          id: `${bookId}-${Date.now()}`,
+          bookId,
+          quantity: 1,
+          addedAt: new Date().toISOString(),
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
+    } catch (err) {
+      console.error('Error updating cart in localStorage:', err);
+    }
   };
 
   if (isLoading) {
